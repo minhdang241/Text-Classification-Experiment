@@ -7,7 +7,7 @@ from transformers import DistilBertForSequenceClassification, AutoTokenizer
 
 
 class DistilBERTClassifier(nn.Module):
-    def __init__(self, data_cofig: Dict[str, Any], args: argparse.Namespace = None):
+    def __init__(self, data_config: Dict[str, Any], args: argparse.Namespace = None):
         super().__init__()
         self.model = DistilBertForSequenceClassification.from_pretrained(
             "distilbert-base-uncased"

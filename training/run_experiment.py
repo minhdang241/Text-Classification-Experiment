@@ -43,15 +43,13 @@ def _setup_parser():
     parser.add_argument("--help", "-h", action="help")
     return parser
 
-    return parser
-
 
 def main():
     # pl.seed_everything(2401)
     parser = _setup_parser()
     args = parser.parse_args()
-    data_class = _import_class(f"text_classifer.data{args.data_class}")
-    model_class = _import_class(f"text_classifer.data{args.model_class}")
+    data_class = _import_class(f"text_classifier.data.{args.data_class}")
+    model_class = _import_class(f"text_classifier.models.{args.model_class}")
 
     data = data_class(args)
     model = model_class(data_config=data.config(), args=args)
