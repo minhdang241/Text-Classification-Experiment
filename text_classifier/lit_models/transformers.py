@@ -33,11 +33,11 @@ class TransformerLitModel(BaseLitModel):
         outputs = self.model(batch)
         loss = self.loss_fn(outputs.logits, labels)
         self.log("val_loss", loss, prog_bar=True)
-        self.val_acc(F.softmax(outputs.logits), labels)
+        self.val_acc(F.softmax(outputs.logits, dim=-1), labels)
         self.log("val_acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
 
     def test_step(self, batch, batch_idx):
         labels = batch["labels"]
         outputs = self.model(batch)
-        self.test_acc(F.softmax(outputs.logits), labels)
+        self.test_acc(F.softmax(outputs.logits, dim=-1), labels)
         self.log("test_acc", self.test_acc, on_step=False, on_epoch=True, prog_bar=True)
