@@ -16,7 +16,7 @@ class TransformerLitModel(BaseLitModel):
 
     def __init__(self, model, args=None):
         super().__init__(model, args)
-
+        self.model = model
         self.mapping = self.model.data_config["mapping"]
         inverse_mapping = {val: ind for ind, val in enumerate(self.mapping)}
         self.loss_fn = nn.CrossEntropyLoss()

@@ -5,7 +5,6 @@ from typing import Any, Dict
 from transformers import DistilBertForSequenceClassification, AutoTokenizer
 
 
-
 class DistilBERTClassifier(nn.Module):
     def __init__(self, data_config: Dict[str, Any], args: argparse.Namespace = None):
         super().__init__()
@@ -20,12 +19,14 @@ class DistilBERTClassifier(nn.Module):
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
         labels = batch["labels"]
-        outputs = model(input_ids, attention_mask)
+        outputs = self.model(input_ids, attention_mask)
         return outputs
-    
+
     def predict(self, sentence: str) -> torch.Tensor:
         tokenized_input = AutoTokenizer(sentence)
-        output = model(tokenized_input["input_ids"], tokenized_input["attention_mask"])
+        output = self.model(
+            tokenized_input["input_ids"], tokenized_input["attention_mask"]
+        )
         logit = output.logits
         pred_idx = torch.argmax(logit, dim=-1)
         return self.idx_2_label[pred_idx]
