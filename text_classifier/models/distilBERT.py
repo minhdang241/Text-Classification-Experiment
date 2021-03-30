@@ -13,7 +13,7 @@ class DistilBERTClassifier(nn.Module):
             "distilbert-base-uncased"
         )
         self.data_config = data_config
-        self.idx_2_label = {v: k for k, v in data_cofig["mapping"].items()}
+        self.idx_2_label = {v: k for k, v in data_config["mapping"].items()}
         self.tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
