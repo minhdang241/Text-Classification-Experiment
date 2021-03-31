@@ -53,7 +53,6 @@ class IMDB(BaseDataModule):
         # Create IMDB dataset
         self.data_test = IMDBDataset(test_encodings, test_labels)
         train_ds = IMDBDataset(train_encodings, train_labels)
-        print(len(train_ds))
         self.data_train, self.data_val = random_split(train_ds, [20000, 5000])
 
     def __repr__(self) -> str:
