@@ -1,10 +1,10 @@
 """Base Dataset class."""
 import os
-from typing import Any, Callable, Dict, Sequence, Tuple, Union
 from urllib.request import urlopen, urlretrieve
-
-import torch
 from tqdm import tqdm
+from typing import Any, Callable, Dict, Sequence, Tuple, Union
+import torch
+
 
 SequenceOrTensor = Union[Sequence, torch.Tensor]
 

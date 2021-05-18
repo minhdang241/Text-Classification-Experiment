@@ -1,10 +1,7 @@
 """Base Dataset class."""
-import os
 from typing import Any, Callable, Dict, Sequence, Tuple, Union
-from urllib.request import urlopen, urlretrieve
-
 import torch
-from tqdm import tqdm
+
 
 SequenceOrTensor = Union[Sequence, torch.Tensor]
 
@@ -69,9 +66,7 @@ class BaseDataset(torch.utils.data.Dataset):
         return datum, target
 
 
-def convert_strings_to_labels(
-    strings: Sequence[str], mapping: Dict[str, int], length: int
-) -> torch.Tensor:
+def convert_strings_to_labels(strings: Sequence[str], mapping: Dict[str, int], length: int) -> torch.Tensor:
     """
     Convert sequence of N strings to a (N, length) ndarray, with each string wrapped with <S> and <E> tokens,
     and padded with the <P> token.
@@ -85,9 +80,7 @@ def convert_strings_to_labels(
     return labels
 
 
-def split_dataset(
-    base_dataset: BaseDataset, fraction: float, seed: int
-) -> Tuple[BaseDataset, BaseDataset]:
+def split_dataset(base_dataset: BaseDataset, fraction: float, seed: int) -> Tuple[BaseDataset, BaseDataset]:
     """
     Split input base_dataset into 2 base datasets, the first of size fraction * size of the base_dataset and the
     other of size (1 - fraction) * size of the base_dataset.
@@ -97,28 +90,3 @@ def split_dataset(
     return torch.utils.data.random_split(
         base_dataset, [split_a_size, split_b_size], generator=torch.Generator().manual_seed(seed)
     )
-
-
-class TqdmUpTo(tqdm):
-    """From https://github.com/tqdm/tqdm/blob/master/examples/tqdm_wget.py"""
-
-    def update_to(self, blocks=1, bsize=1, tsize=None):
-        """
-        Parameters
-        ----------
-        blocks : int, optional
-            Number of blocks transferred so far [default: 1].
-        bsize  : int, optional
-            Size of each block (in tqdm units) [default: 1].
-        tsize  : int, optional
-            Total size (in tqdm units). If [default: None] remains unchanged.
-        """
-        if tsize is not None:
-            self.total = tsize  # pylint: disable=attribute-defined-outside-init
-        self.update(blocks * bsize - self.n)  # will also set self.n = b * bsize
-
-
-def download_url(url, filename):
-    """Download a file from url to filename, with a progress bar."""
-    with TqdmUpTo(unit="B", unit_scale=True, unit_divisor=1024, miniters=1) as t:
-        urlretrieve(url, filename, reporthook=t.update_to, data=None)  # nosec

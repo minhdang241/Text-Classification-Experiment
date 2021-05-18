@@ -14,7 +14,7 @@ DOWNLOADED_DATA_DIRNAME = BaseDataModule.data_dirname() / "downloaded/imdb"
 
 class IMDBDataset(Dataset):
     def __init__(self, encodings, labels):
-        self.encodings = encodings  # shape: {input_ids: [], attention_mask: []}
+        self.encodings = encodings
         self.labels = labels
 
     def __getitem__(self, idx):
@@ -57,10 +57,10 @@ class IMDB(BaseDataModule):
 
     def __repr__(self) -> str:
         """Print infor about the dataset"""
-        basic = f"IMDB Dataset\nNum classes: {len(self.mapping)}\nMapping: {self.mapping}\n"
-        data = (
-            f"Train/val/test sizes: {len(self.data_train), len(self.data_val), len(self.data_test)}"
+        basic = (
+            f"IMDB Dataset\nNum classes: {len(self.mapping)}\nMapping: {self.mapping}\n"
         )
+        data = f"Train/val/test sizes: {len(self.data_train), len(self.data_val), len(self.data_test)}"
         return basic + data
 
 

@@ -8,8 +8,30 @@ from torch.utils.data import DataLoader
 from text_classifier import utils
 
 
+def load_and_print_info(data_module_class: type) -> None:
+    """Load and print data info."""
+    parser = argparse.ArgumentParser()
+    data_module_class.add_to_argparse(parser)
+    args = parser.parse_args()
+    dataset = data_module_class(args)
+    dataset.prepare_data()
+    dataset.setup()
+    print(dataset)
+
+
+def _download_raw_dataset(metadata: Dict, dl_dirname: Path) -> Path:
+    dl_dirname.mkdir(parents=True, exist_ok=True)
+    filename = dl_dirname / metadata["filename"]
+    if filename.exists():
+        return
+    print(f"Downloading raw dataset from {metadata['url']} to {filename}...")
+    utils.download_url(metadata["url"], filename)
+    return filename
+
+
 BATCH_SIZE = 32
 NUM_WORKERS = 0
+
 
 class BaseDataModule(pl.LightningDataModule):
     """
@@ -100,26 +122,6 @@ class BaseDataModule(pl.LightningDataModule):
             pin_memory=True,
         )
 
-
-def load_and_print_info(data_module_class: type) -> None:
-    """Load and print data info."""
-    parser = argparse.ArgumentParser()
-    data_module_class.add_to_argparse(parser)
-    args = parser.parse_args()
-    dataset = data_module_class(args)
-    dataset.prepare_data()
-    dataset.setup()
-    print(dataset)
-
-
-def _download_raw_dataset(metadata: Dict, dl_dirname: Path) -> Path:
-    dl_dirname.mkdir(parents=True, exist_ok=True)
-    filename = dl_dirname / metadata["filename"]
-    if filename.exists():
-        return
-    print(f"Downloading raw dataset from {metadata['url']} to {filename}...")
-    utils.download_url(metadata["url"], filename)
-    return filename
 
 if __name__ == "__main__":
     print(Path(__file__).resolve().parents[2] / "data")

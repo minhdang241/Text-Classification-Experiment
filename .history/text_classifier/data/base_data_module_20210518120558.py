@@ -11,6 +11,7 @@ from text_classifier import utils
 BATCH_SIZE = 32
 NUM_WORKERS = 0
 
+
 class BaseDataModule(pl.LightningDataModule):
     """
     Base DataModule.

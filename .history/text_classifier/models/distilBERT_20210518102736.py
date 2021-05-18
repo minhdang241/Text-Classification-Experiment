@@ -1,9 +1,8 @@
-import argparse
-from typing import Any, Dict
-
 import torch
+import argparse
 import torch.nn as nn
-from transformers import AutoTokenizer, DistilBertForSequenceClassification
+from typing import Any, Dict
+from transformers import DistilBertForSequenceClassification, AutoTokenizer
 
 
 class DistilBERTClassifier(nn.Module):
@@ -19,7 +18,7 @@ class DistilBERTClassifier(nn.Module):
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
         input_ids = batch["input_ids"]
         attention_mask = batch["attention_mask"]
-        # labels = batch["labels"]
+        labels = batch["labels"]
         outputs = self.model(input_ids, attention_mask)
         return outputs
 

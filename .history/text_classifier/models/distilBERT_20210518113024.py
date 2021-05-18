@@ -1,9 +1,8 @@
-import argparse
-from typing import Any, Dict
-
 import torch
+import argparse
 import torch.nn as nn
-from transformers import AutoTokenizer, DistilBertForSequenceClassification
+from typing import Any, Dict
+from transformers import DistilBertForSequenceClassification, AutoTokenizer
 
 
 class DistilBERTClassifier(nn.Module):
