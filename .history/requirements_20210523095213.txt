@@ -154,16 +154,16 @@ torchmetrics==0.2.0
 torchtext==0.9.1
 torchvision==0.9.1
 tornado==6.1
-tqdm 
+tqdm @ file:///tmp/build/80754af9/tqdm_1615925068909/work
 traitlets==4.3.3
 transformers==4.6.0
 typed-ast==1.4.2
-typing-extensions 
-urllib3 
+typing-extensions @ file:///home/ktietz/src/ci_mi/typing_extensions_1612808209620/work
+urllib3 @ file:///tmp/build/80754af9/urllib3_1615837158687/work
 wandb==0.10.24
 wcwidth==0.2.5
 webencodings==0.5.1
 Werkzeug==1.0.1
 wrapt==1.12.1
 yarl==1.6.3
-zipp 
+zipp @ file:///tmp/build/80754af9/zipp_1615904174917/work
