@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 OPTIMIZER = "AdamW"
-LR = 1e-3
+LR = 5e-5
 LOSS = "cross_entropy"
 ONE_CYCLE_TOTAL_STEPS = 100
 
@@ -63,6 +63,7 @@ class BaseLitModel(pl.LightningModule):
         optimizer = self.optimizer_class(self.parameters(), lr=self.lr)
         if self.one_cycle_max_lr is None:
             return optimizer
+            
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimizer,
             max_lr=self.one_cycle_max_lr,
