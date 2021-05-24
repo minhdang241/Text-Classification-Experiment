@@ -7,14 +7,14 @@ from transformers import AutoTokenizer, DistilBertForSequenceClassification
 
 
 class DistilBERTClassifier(nn.Module):
-    def __init__(self, data_config: Dict[str, Any], args: argparse.Namespace = None):
+    def __init__(self, data_config: Dict[str, Any], model_checkpoint: str, args: argparse.Namespace = None):
         super().__init__()
         self.model = DistilBertForSequenceClassification.from_pretrained(
-            "distilbert-base-uncased"
+            model_checkpoint
         )
+        self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
         self.data_config = data_config
         self.idx_2_label = {v: k for k, v in data_config["mapping"].items()}
-        self.tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
     def forward(self, batch: torch.Tensor) -> torch.Tensor:
         input_ids = batch["input_ids"]

@@ -23,9 +23,10 @@ def _setup_parser():
     parser.add_argument(
         "--wandb", action="store_true", default=False
     )  # when setting the "--wandb" flag the value will be True, if it is omitted the value is False
-    parser.add_argument("--data_class", type=str, default="IMDB")
+    parser.add_argument("--data_class", type=str, default="IMDBTransformer")
     parser.add_argument("--model_class", type=str, default="DistilBERTClassifier")
     parser.add_argument("--load_checkpoint", type=str, default=None)
+    parser.add_argument("--model_checkpoint", type=str, default=None)
 
     temp_args, _ = parser.parse_known_args()
     data_class = _import_class(f"text_classifier.data.{temp_args.data_class}")
@@ -50,9 +51,13 @@ def main():
     args = parser.parse_args()
     data_class = _import_class(f"text_classifier.data.{args.data_class}")
     model_class = _import_class(f"text_classifier.models.{args.model_class}")
+    if args["model_checkpoint"]:
+        data = data_class(args, model_checkpoint=args["model_checkpoint"])
+        model = model_class(data_config=data.config(), model_checkpoint=args["model_checkpoint"], args=args)
+    else:
+        data = data_class(args)
+        model = model_class(data_config=data.config(), args=args)
 
-    data = data_class(args)
-    model = model_class(data_config=data.config(), args=args)
 
     lit_model_class = lit_models.TransformerLitModel
 

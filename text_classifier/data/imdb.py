@@ -11,8 +11,7 @@ from transformers import AutoTokenizer
 
 DOWNLOADED_DATA_DIRNAME = BaseDataModule.data_dirname() / "downloaded/imdb"
 
-
-class IMDBDataset(Dataset):
+class IMDBTransformerDataset(Dataset):
     def __init__(self, encodings, labels):
         self.encodings = encodings  # shape: {input_ids: [], attention_mask: []}
         self.labels = labels
@@ -26,34 +25,35 @@ class IMDBDataset(Dataset):
         return len(self.labels)
 
 
-class IMDB(BaseDataModule):
+class IMDBTransformer(BaseDataModule):
     """
-    IMDB DataModule
+    IMDB DataModule for transformer
     """
 
-    def __init__(self, args: argparse.Namespace = None) -> None:
+    def __init__(self, model_checkpoint: str, args: argparse.Namespace = None) -> None:
         super().__init__(args)
         self.data_dir = DOWNLOADED_DATA_DIRNAME
         self.input_dims = None
         self.output_dims = (1,)
         self.mapping = {"neg": 0, "pos": 1}
+        self.tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
 
     def prepare_data(self):
         "Download IMDB dataset"
         if not os.path.exists(DOWNLOADED_DATA_DIRNAME / "aclImdb"):
             TorchIMDB(self.data_dir)
 
-    def setup(self, stage: str = None):
+    def setup(self, pretrained: str):
         "Split into train, val, test"
         train_texts, train_labels = read_imdb_split(self.data_dir / "aclImdb/train")
         test_texts, test_labels = read_imdb_split(self.data_dir / "aclImdb/test")
-        tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
-        train_encodings = tokenizer(train_texts, truncation=True, padding=True)
-        test_encodings = tokenizer(train_texts, truncation=True, padding=True)
+        train_encodings = self.tokenizer(train_texts, truncation=True, padding=True)
+        test_encodings = self.tokenizer(train_texts, truncation=True, padding=True)
         # Create IMDB dataset
-        self.data_test = IMDBDataset(test_encodings, test_labels)
-        train_ds = IMDBDataset(train_encodings, train_labels)
+        self.data_test = IMDBTransformerDataset(test_encodings, test_labels)
+        train_ds = IMDBTransformerDataset(train_encodings, train_labels)
         self.data_train, self.data_val = random_split(train_ds, [20000, 5000])
+
 
     def __repr__(self) -> str:
         """Print infor about the dataset"""
@@ -76,4 +76,4 @@ def read_imdb_split(split_dir):
 
 
 if __name__ == "__main__":
-    load_and_print_info(IMDB)
+    load_and_print_info(IMDBTransformer)
