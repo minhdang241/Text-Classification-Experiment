@@ -80,8 +80,11 @@ def main():
     trainer.tune(
         lit_model, datamodule=data
     )  # if passing --auto_lr_find, this will set learning rate
-    trainer.fit(lit_model, datamodule=data)
-    trainer.test(lit_model, datamodule=data)
+    
+    data.prepare()
+    data.setup()
+    trainer.fit(lit_model, data.train_dataloader, data.val_dataloader)
+    trainer.test(lit_model, test_dataloaders=data.test_dataloader)
 
 
 if __name__ == "__main__":

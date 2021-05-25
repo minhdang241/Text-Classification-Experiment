@@ -4,12 +4,14 @@ import os
 from pathlib import Path
 
 import torch
-from text_classifier.data.base_data_module import BaseDataModule, load_and_print_info
 from torch.utils.data import Dataset, random_split
 from torchtext.datasets import IMDB as TorchIMDB
 from transformers import AutoTokenizer
 
+from text_classifier.data.base_data_module import BaseDataModule, load_and_print_info
+
 DOWNLOADED_DATA_DIRNAME = BaseDataModule.data_dirname() / "downloaded/imdb"
+
 
 class IMDBTransformerDataset(Dataset):
     def __init__(self, encodings, labels):
@@ -43,7 +45,7 @@ class IMDBTransformer(BaseDataModule):
         if not os.path.exists(DOWNLOADED_DATA_DIRNAME / "aclImdb"):
             TorchIMDB(self.data_dir)
 
-    def setup(self, pretrained: str):
+    def setup(self):
         "Split into train, val, test"
         train_texts, train_labels = read_imdb_split(self.data_dir / "aclImdb/train")
         test_texts, test_labels = read_imdb_split(self.data_dir / "aclImdb/test")
@@ -53,7 +55,6 @@ class IMDBTransformer(BaseDataModule):
         self.data_test = IMDBTransformerDataset(test_encodings, test_labels)
         train_ds = IMDBTransformerDataset(train_encodings, train_labels)
         self.data_train, self.data_val = random_split(train_ds, [20000, 5000])
-
 
     def __repr__(self) -> str:
         """Print infor about the dataset"""

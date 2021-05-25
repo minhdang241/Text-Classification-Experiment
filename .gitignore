@@ -45,3 +45,7 @@ logs
 .mypy_cache
 notebooks/lightning_logs
 .history
+
+*.tar.gz
+_UIT-VSFC
+notebooks/datasets
