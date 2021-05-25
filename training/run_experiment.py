@@ -51,7 +51,7 @@ def main():
     args = parser.parse_args()
     data_class = _import_class(f"text_classifier.data.{args.data_class}")
     model_class = _import_class(f"text_classifier.models.{args.model_class}")
-    if args["model_checkpoint"]:
+    if args.model_checkpoint:
         data = data_class(args, model_checkpoint=args["model_checkpoint"])
         model = model_class(data_config=data.config(), model_checkpoint=args["model_checkpoint"], args=args)
     else:
